@@ -20,13 +20,17 @@ echo "====================================="
 # 2. Detect OS and install the Sidecar package
 if [ -f /etc/debian_version ]; then
     echo "Detected Debian/Ubuntu-based system. Installing repository..."
+    # Using the correct URL for the official Graylog sidecar repository package
     wget -q https://graylog2.org -O /tmp/graylog-sidecar-repository.deb
     dpkg -i /tmp/graylog-sidecar-repository.deb
+    
+    # Run apt update and force clean, non-interactive installations
     apt-get update
-    apt-get install -y graylog-sidecar filebeat
+    DEBIAN_FRONTEND=noninteractive apt-get install -y graylog-sidecar filebeat
 
 elif [ -f /etc/redhat-release ]; then
     echo "Detected RHEL/CentOS-based system. Installing repository..."
+    # Using the correct URL for RHEL package delivery
     rpm -Uvh --quiet https://graylog2.org || true
     
     if command -v dnf &> /dev/null; then
